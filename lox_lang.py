@@ -1,5 +1,6 @@
 import sys
 from errors import FileNotFoundError
+from lexer import Lexer
 
 class Lox:
     hadError = False
@@ -17,7 +18,8 @@ class Lox:
 
     # runs lox source code
     def run(self, source: str):
-        tokens = source.split(" ")
+        lexer = Lexer(source)
+        tokens = lexer.scanTokens()
         
         for token in tokens:
             print(token, end=" ")
@@ -48,9 +50,11 @@ class Lox:
     def makeTokens(self, progInput):
         pass
     
-    def error(self, line: int, message: str):
-        self.report(line, "", message)
+    @staticmethod
+    def error(line: int, message: str):
+        Lox.report(line, "", message)
 
-    def report(self, line: int, where: str, message: str):
+    @staticmethod 
+    def report(line: int, where: str, message: str):
         sys.stderr.write(f"[Line {line}] Error {where}: {message}" )
         Lox.hadError = True

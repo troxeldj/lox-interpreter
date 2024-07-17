@@ -26,6 +26,7 @@ class Lexer:
     def scanToken(self):
         current_char = self.advance()
         match(current_char):
+            # simple single characters
             case '(': self.addToken(TokenType.LEFT_PAREN)
             case ')': self.addToken(TokenType.RIGHT_PAREN)
             case '{': self.addToken(TokenType.LEFT_BRACE)
@@ -36,9 +37,13 @@ class Lexer:
             case '+': self.addToken(TokenType.PLUS)
             case ';': self.addToken(TokenType.SEMICOLON)
             case '*': self.addToken(TokenType.STAR)
+
+            case '!': self.addToken(TokenType.BANG_EQUAL if self.match('=') else TokenType. BANG)
+
+
+            # case: invalid character
             case _:
                 Lox.error(self.line, "Unexpected character.")
-
 
     def addToken(self, type: TokenType):
         self._addToken(type, None)
@@ -51,3 +56,12 @@ class Lexer:
         self.current += 1
 
         return self.source[self.current - 1]
+    
+    def match(self, expected: str):
+        if self.isAtEnd(): return False
+        
+        # does not match expected character
+        if(self.source[self.current] != expected): return False
+
+        self.current += 1
+        return True

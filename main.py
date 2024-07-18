@@ -1,5 +1,5 @@
 import sys
-from lox_lang import Lox
+from src.lox import Lox
 
 def main():
     lox = Lox()

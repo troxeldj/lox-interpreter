@@ -4,7 +4,7 @@ from Tok import Token
 from TT import TokenType
 
 class AstPrinter(Expr.ExprVisitor):
-    def print(self, expr: Expr.Expr):
+    def print(self, expr):
         return expr.accept(self)
 
     def parenthesize(self, name, *exprs) -> str:

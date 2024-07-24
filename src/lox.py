@@ -1,17 +1,27 @@
 import sys
 from Scanner import Scanner
-
-
+from Tok import Token
+from TT import TokenType
+from Parser import Parser
 class Lox:
 
     hadError = False
 
     def run(self, fileContents: str):
+        from ast_printer import AstPrinter
+        
         scanner = Scanner(fileContents)
         tokens = scanner.scanTokens()
 
-        for token in tokens:
-            print(token)
+        parser = Parser(tokens)
+        
+        # this is returning none for some reason
+        expr = parser.parse()
+
+        if(Lox.hadError):
+            return
+        
+        print(AstPrinter().print(expr))
 
     def runFile(self, path: str):
         try:
@@ -37,6 +47,13 @@ class Lox:
     def report(line: int, where: str, message: str):
         sys.stderr.write(f"[{line}] Error {where}: {message}\n")
         Lox.hadError = True
+
+    @staticmethod
+    def error_tok(tok: Token, message: str):
+        if (tok.type == TokenType.EOF):
+            Lox.report(tok.line, " at end", message)
+        else:
+            Lox.report(tok.line, f"at '{tok.lexeme}", message)
 
 
     def main(self):

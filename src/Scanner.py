@@ -43,7 +43,7 @@ class Scanner:
     
     # adds token to self.tokens (list)
     def scanToken(self):
-        from .lox import Lox
+        from lox import Lox
         current_char = self.advance()
         match(current_char):
             # 1 char tokens

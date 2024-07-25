@@ -2,10 +2,13 @@ import sys
 from Scanner import Scanner
 from Tok import Token
 from TT import TokenType
+from error import LRuntimeError
 from Parser import Parser
+from Interpreter import Interpreter
 class Lox:
-
+    interpreter = Interpreter()
     hadError = False
+    hadRuntimeError = False
 
     def run(self, fileContents: str):
         from ast_printer import AstPrinter
@@ -21,7 +24,8 @@ class Lox:
         if(Lox.hadError):
             return
         
-        print(AstPrinter().print(expr))
+        Lox.interpreter.interpret(expr)
+        
 
     def runFile(self, path: str):
         try:
@@ -32,6 +36,7 @@ class Lox:
         self.run(fileContents)
 
         if Lox.hadError: exit(65)
+        if Lox.hadRuntimeError: exit(70)
 
     def runPrompt(self):
         while True:
@@ -55,6 +60,10 @@ class Lox:
         else:
             Lox.report(tok.line, f"at '{tok.lexeme}", message)
 
+    @staticmethod
+    def runtimeError(err: LRuntimeError):
+        sys.stderr.write(f"err.message\n[line{err.token.line}]")
+        Lox.hadRuntimeError = True
 
     def main(self):
         if len(sys.argv) > 2:

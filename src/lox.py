@@ -36,7 +36,7 @@ class Lox:
     def runPrompt(self):
         while True:
             line = input("> ")
-            if line is None or line == "exit":
+            if line is not None or line != "exit":
                 self.run(line)
                 Lox.hadError = False
     @staticmethod

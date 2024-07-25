@@ -1,4 +1,3 @@
-from typing import override
 import Expr
 from Tok import Token
 from TT import TokenType
@@ -11,19 +10,15 @@ class AstPrinter(Expr.ExprVisitor):
         content = ' '.join(expr.accept(self) for expr in exprs)
         return f'({name} {content})'
 
-    @override
     def visit_binary_expr(self, expr: Expr.Binary):
         return self.parenthesize(expr.operator.lexeme, expr.left, expr.right)
 
-    @override
     def visit_unary_expr(self, expr: Expr.Unary):
         return self.parenthesize(expr.operator.lexeme, expr.right)
     
-    @override
     def visit_grouping_expr(self, expr: Expr.Grouping):
         return self.parenthesize("group", expr.expression)
 
-    @override
     def visit_literal_expr(self, expr: Expr.Literal):
         if expr.value is None: return "nil"
         return str(expr.value)
